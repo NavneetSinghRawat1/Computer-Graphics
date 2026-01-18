@@ -2,6 +2,48 @@
 #include <conio.h>
 #include <math.h>
 #include <iostream.h>
+void plotEllipsePoints(int xc,int yc,int x,int y){
+    putpixel(xc+x,yc+y,WHITE);
+    putpixel(xc-x,yc+y,WHITE);
+    putpixel(xc+x,yc-y,WHITE);
+    putpixel(xc-x,yc-y,WHITE);
+}
+void midpointEllipse(int xc,int yc,int a,int b){
+    int x=0,y=b;
+    long a2=a*a;
+    long b2=b*b;
+    long dx=2*b2*x;
+    long dy=2*a2*y;
+    long p2;
+    long p1=b2-(a2*b)+(a2/4);
+    while(dx<dy){
+        plotEllipsePoints(xc,yc,x,y);
+        x++;
+        dx=dx+(2*b2);
+        if(p1<0){
+            p1=p1+dx+b2;
+        }
+        else{
+            y--;
+            dy=dy-(2*a2);
+            p1=p1+dx-dy+b2;
+        }
+    }
+    p2=(b2*(x+0.5)*(x+0.5)+(a2*(y-1)*(y-1))-(a2*b2));
+    while(y>0){
+        plotEllipsePoints(xc,yc,x,y);
+        y--;
+        dy=dy-(2*a2);
+        if(p2>0){
+            p2=p2+a2-dy;
+        }
+        else{
+            x++;
+            dx=dx+(2*b2);
+            p2=p2+dx-dy+a2;
+        }
+    }
+}
 void midpoint_circle_algo(int xc,int yc,int r){
     int x=0,y=r;
     int p=1-r;
@@ -81,6 +123,49 @@ void bresenham_line(int x1,int y1,int x2,int y2){
         }
         x=x+1;
     }
+}
+void t_s_r_f_e(int x1,int y1,int x,int y,int who){
+        int t_s_r;
+        cout << "\n--- TRANSFORMATION MENU ---";
+        cout << "\n1. Translate";
+        cout << "\n2. Scale";
+        cout << "\n3. Rotate";
+        cout << "\nEnter choice: ";
+        cin >> t_s_r;
+        if (t_s_r == 1)
+        {
+            int tx,ty;
+            cout<<"Enter tx ty: ";
+            cin>>tx>>ty;
+            if(who==1)
+            midpointEllipse(x1+tx,y1+ty,x,y);
+            else if(who==2)
+            ellipse(x1+tx,y1+ty,0,360,x,y);
+        }
+        else if(t_s_r==2){
+            float sx, sy;
+            cout<<"Enter sx sy: ";
+            cin>>sx>>sy;
+            if(who==1)
+            midpointEllipse(x1*sx,y1*sy,x*sx,y*sy);
+            else if(who==2)
+            ellipse(x1*sx,y1*sy,0,360,x*sx,y*sy);
+        }
+        else if(t_s_r==3){
+            float angle,rad;
+            cout<<"Enter angle (degrees): ";
+            cin>>angle;
+            rad=angle*3.14/180;
+            x1=x1*cos(rad)-y1*sin(rad);
+            y1=x1*sin(rad)+y1*cos(rad);
+            if(who==1)
+            midpointEllipse(x1,y1,x,y);
+            else if(who==2)
+            ellipse(x1,y1,0,360,x,y);
+        }
+        else{
+            cout<<"\nInvalid choice!";
+        }
 }
 void t_s_r_f(int x1,int y1,int r,int who){
             int t_s_r;
@@ -260,43 +345,31 @@ void main(){
         clrscr();
         cleardevice();
         cout<<"\nEllipse Drawing Algorithm";
-        cout<<"\nEnter location of Ellipse x y: ";
-        cin>>x1>>y1;
-        cout << "Enter radius from x and y: ";
-        cin>>x2>>y2;
-        ellipse(x1,y1,0,360,x2,y2);
-        int t_s_r;
-        cout << "\n--- TRANSFORMATION MENU ---";
-        cout << "\n1. Translate";
-        cout << "\n2. Scale";
-        cout << "\n3. Rotate";
-        cout << "\nEnter choice: ";
-        cin >> t_s_r;
-        if (t_s_r == 1)
-        {
-            int tx,ty;
-            cout<<"Enter tx ty: ";
-            cin>>tx>>ty;
-            ellipse(x1+tx,y1+ty,0,360,x2,y2);
+        cout<<"\n1. Mid point";
+        cout<<"\n2. Function";
+        cout<<"\nEnter choice: ";
+        cin>>algo;
+        if(algo==1){
+
+            cout<<"\nEnter center of Ellipse (xc,yc): ";
+            cin>>x1>>y1;
+            cout << "Enter radius of x and y: ";
+            cin>>x2>>y2;
+            midpointEllipse(x1,y1,x2,y2);
+            t_s_r_f_e(x1,y1,x2,y2,algo);
         }
-        else if(t_s_r==2){
-            float sx, sy;
-            cout<<"Enter sx sy: ";
-            cin>>sx>>sy;
-            ellipse(x1*sx,y1*sy,0,360,x2*sx,y2*sy);
-        }
-        else if(t_s_r==3){
-            float angle,rad;
-            cout<<"Enter angle (degrees): ";
-            cin>>angle;
-            rad=angle*3.14/180;
-            x1=x1*cos(rad)-y1*sin(rad);
-            y1=x1*sin(rad)+y1*cos(rad);
+        else if(algo==2){
+            cout<<"\nEnter location of Ellipse x y: ";
+            cin>>x1>>y1;
+            cout << "Enter radius from x and y: ";
+            cin>>x2>>y2;
             ellipse(x1,y1,0,360,x2,y2);
+            t_s_r_f_e(x1,y1,x2,y2,algo);
         }
         else{
             cout<<"\nInvalid choice!";
         }
+        
     }
     else if(shape==4){
         clrscr();
