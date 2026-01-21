@@ -217,9 +217,9 @@ void t_s_r_f(int x1,int y1,int x2,int y2,int who){
                 if(who==1)
                 dda_line(x1+tx,y1+ty,x2+tx,y2+ty);
                 else if(who==2)
-                bresenham_line(x1, y1, x2, y2);
+                bresenham_line(x1+tx, y1+ty, x2+tx, y2+ty);
                 else if(who==3)
-                line(x1,y1,x2,y2);
+                line(x1+tx, y1+ty, x2+tx, y2+ty);
             }
             else if (t_s_r == 2)
             {
@@ -229,9 +229,9 @@ void t_s_r_f(int x1,int y1,int x2,int y2,int who){
                 if(who==1)
                 dda_line(x1*sx,y1*sy,x2*sx,y2*sy);
                 else if(who==2)
-                bresenham_line(x1, y1, x2, y2);
+                bresenham_line(x1*sx,y1*sy,x2*sx,y2*sy);
                 else if(who==3)
-                line(x1,y1,x2,y2);
+                line(x1*sx,y1*sy,x2*sx,y2*sy);
             }
             else if (t_s_r == 3)
             {
